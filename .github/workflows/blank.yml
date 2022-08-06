@@ -24,13 +24,15 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: .
-      
-      - name: Setup Kubectl
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: get pods
 
+      - name: Download Kubectl
+        run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+      - name: Install Kubectl
+        run: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      
+      - name: write .kube/config
+        run: mkdir ~/.kube && echo "{{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+      
       - name: List pods
         run: kubectl get pods --all-namespaces

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: feavy-nginx
-          image: "europe-west3-docker.pkg.dev/feavy-358616/feavy-registry/feavy-nginx:1.0.1"
+          image: "ghcr.io/feavy/feavy-nginx:1.0.1"
           ports:
             - name: http
               containerPort: 80

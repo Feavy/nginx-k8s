@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: feavy-nginx
-          image: "ghcr.io/feavy/feavy-nginx:latest"
+          image: ${DOCKER_IMAGE}
           ports:
             - name: http
               containerPort: 80

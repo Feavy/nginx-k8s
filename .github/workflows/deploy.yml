@@ -25,27 +25,11 @@ jobs:
         with:
           path: .
 
-      - name: Download Kubectl
-        run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-
-      - name: Install Kubectl
-        run: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-      
-      - name: write .kube/config
-        run: mkdir ~/.kube && echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-      
-      - name: List pods
-        run: kubectl get pods --all-namespaces
-
-      - name: Build Docker image
-        run: docker build . -t ghcr.io/feavy/feavy-nginx:latest
-
-      - name: Publish image to GitHub Container Registry
-        run: |
-          echo $PAT | docker login ghcr.io --username feavy --password-stdin
-          docker push ghcr.io/feavy/feavy-nginx:latest
+      - uses: feavy/deploy@main
         env:
-          PAT: ${{ secrets.PAT }}
-
-      - name: Deploy image to Kubernetes
-        run: kubectl apply -f deployment.yml
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          GITHUB_USERNAME: feavy
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          DOCKERFILE_PATH: .
+          DOCKER_IMAGE: feavy-nginx:latest
+          DEPLOYMENT: deployment.yml

@@ -38,4 +38,11 @@ jobs:
         run: kubectl get pods --all-namespaces
 
       - name: Build Docker image
-        run: docker build . -t feavy-nginx:1.0
+        run: docker build . -t ghcr.io/feavy/feavy-nginx:1.0.0
+
+      - name: Publish image to GitHub Container Registry
+        run: |
+          echo $PAT | docker login ghcr.io --username feavy --password-stdin
+          docker push ghcr.io/feavy/feavy-nginx:1.0.0
+        env:
+          PAT: ${{ secrets.PAT }}

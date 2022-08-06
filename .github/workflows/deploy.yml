@@ -38,11 +38,11 @@ jobs:
         run: kubectl get pods --all-namespaces
 
       - name: Build Docker image
-        run: docker build . -t ghcr.io/feavy/feavy-nginx:1.0.0
+        run: docker build . -t europe-west3-docker.pkg.dev/feavy-358616/feavy-registry/feavy-nginx:1.0.0
 
       - name: Publish image to GitHub Container Registry
         run: |
-          echo $PAT | docker login ghcr.io --username feavy --password-stdin
-          docker push ghcr.io/feavy/feavy-nginx:1.0.0
+          echo $GCP_KEY | docker login -u _json_key --password-stdin https://europe-west3-docker.pkg.dev
+          docker push europe-west3-docker.pkg.dev/feavy-358616/feavy-registry/feavy-nginx:1.0.0
         env:
-          PAT: ${{ secrets.PAT }}
+          GCP_KEY: ${{ secrets.GCP_KEY }}

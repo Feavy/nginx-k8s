@@ -46,3 +46,6 @@ jobs:
           docker push europe-west3-docker.pkg.dev/feavy-358616/feavy-registry/feavy-nginx:1.0.0
         env:
           GCP_KEY: ${{ secrets.GCP_KEY }}
+
+      - name: Deploy image to Kubernetes
+        run: kubectl apply -f deployment.yml

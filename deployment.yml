@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feavy-nginx
+  namespace: default
+  labels:
+    k8s-app: feavy-nginx
+spec:
+  selector:
+    matchLabels:
+      k8s-app: feavy-nginx
+  template:
+    metadata:
+      labels:
+        k8s-app: feavy-nginx
+        name: feavy-nginx
+    spec:
+      containers:
+        - name: feavy-nginx
+          image: "europe-west3-docker.pkg.dev/feavy-358616/feavy-registry/feavy-nginx:1.0.0"
+          ports:
+            - name: http
+              containerPort: 80
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: regcred
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: feavy-nginx-service
+  namespace: default
+spec:
+  selector:
+    k8s-app: feavy-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      name: web
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: feavy-nginx-route
+  namespace: kube-system
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`nginx.feavy.fr`)
+      services:
+        - name: feavy-nginx-service
+          namespace: default
+          port: 80
+  tls:
+    secretName: feavy-tls

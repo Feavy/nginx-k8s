@@ -33,3 +33,6 @@ jobs:
           DOCKERFILE_PATH: .
           DOCKER_IMAGE: feavy-nginx:latest
           DEPLOYMENT: deployment.yml
+
+      - name: Restart deployment
+        run: kubectl rollout restart deployment feavy-nginx

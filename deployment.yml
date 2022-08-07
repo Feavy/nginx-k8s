@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: feavy-nginx
-  namespace: default
+  namespace: feavy
   labels:
     k8s-app: feavy-nginx
 spec:
@@ -24,12 +24,14 @@ spec:
           imagePullPolicy: Always
       imagePullSecrets:
         - name: regcred
+      nodeSelector:
+        kubernetes.io/hostname: 'feavy'
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: feavy-nginx-service
-  namespace: default
+  namespace: feavy
 spec:
   selector:
     k8s-app: feavy-nginx
@@ -51,7 +53,7 @@ spec:
       match: Host(`nginx.feavy.fr`)
       services:
         - name: feavy-nginx-service
-          namespace: default
+          namespace: feavy
           port: 80
   tls:
     secretName: feavy-tls

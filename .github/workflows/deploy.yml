@@ -25,4 +25,4 @@ jobs:
           DEPLOYMENT: deployment.yml
 
       - name: Restart deployment
-        run: kubectl rollout restart deployment feavy-nginx
+        run: kubectl rollout restart deployment feavy-nginx -n feavy
